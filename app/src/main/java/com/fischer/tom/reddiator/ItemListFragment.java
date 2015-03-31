@@ -2,10 +2,16 @@ package com.fischer.tom.reddiator;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import com.fischer.tom.reddiator.content.Post;
+import com.fischer.tom.reddiator.content.Posts;
 
 
 import com.fischer.tom.reddiator.dummy.DummyContent;
@@ -71,12 +77,7 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: replace with a real list adapter.
-        setListAdapter(new ArrayAdapter<DummyContent.DummyItem>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                DummyContent.ITEMS));
+        new GetPostsOperation().execute("AskReddit");
     }
 
     @Override
@@ -148,5 +149,22 @@ public class ItemListFragment extends ListFragment {
         }
 
         mActivatedPosition = position;
+    }
+
+    public class GetPostsOperation extends AsyncTask<String, Void, ArrayList<Post>> {
+        @Override
+        protected ArrayList<Post> doInBackground(String... params) {
+            return new Posts(params[0]).fetchPosts();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Post> result) {
+            setListAdapter(new ArrayAdapter<Post>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_activated_1,
+                    android.R.id.text1,
+                    result
+            ));
+        }
     }
 }
