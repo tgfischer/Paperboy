@@ -75,18 +75,18 @@ public class MainActivity extends ActionBarActivity
 
         switch (position) {
             case 0:
-                //Home
+                // Front Page
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new ItemListFragment())
                         .commit();
                 break;
             case 1:
-                //Settings
+                // All
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
             case 2:
-                //About
+                // AskReddit
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                         .commit();

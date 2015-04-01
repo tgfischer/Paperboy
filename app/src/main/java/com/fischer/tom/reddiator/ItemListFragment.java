@@ -4,17 +4,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import com.fischer.tom.reddiator.content.Post;
+import com.fischer.tom.reddiator.content.PostAdapter;
 import com.fischer.tom.reddiator.content.Posts;
 
-
-import com.fischer.tom.reddiator.dummy.DummyContent;
 
 /**
  * A list fragment representing a list of Items. This fragment
@@ -27,6 +30,8 @@ import com.fischer.tom.reddiator.dummy.DummyContent;
  */
 public class ItemListFragment extends ListFragment {
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -37,7 +42,7 @@ public class ItemListFragment extends ListFragment {
      * The fragment's current callback object, which is notified of list item
      * clicks.
      */
-    private Callbacks mCallbacks = sDummyCallbacks;
+    private Callbacks mCallbacks = sPostCallbacks;
 
     /**
      * The current activated item position. Only used on tablets.
@@ -60,7 +65,7 @@ public class ItemListFragment extends ListFragment {
      * A dummy implementation of the {@link Callbacks} interface that does
      * nothing. Used only when this fragment is not attached to an activity.
      */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static Callbacks sPostCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(String id) {
         }
@@ -76,8 +81,24 @@ public class ItemListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.posts_content, null);
+
+        this.mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new GetPostsOperation().execute("AskReddit");
+            }
+        });
 
         new GetPostsOperation().execute("AskReddit");
+
+        return view;
     }
 
     @Override
@@ -108,7 +129,7 @@ public class ItemListFragment extends ListFragment {
         super.onDetach();
 
         // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+        mCallbacks = sPostCallbacks;
     }
 
     @Override
@@ -117,7 +138,8 @@ public class ItemListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        //mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        mCallbacks.onItemSelected(Posts.DATA.get(position).getID());
     }
 
     @Override
@@ -159,12 +181,13 @@ public class ItemListFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(ArrayList<Post> result) {
-            setListAdapter(new ArrayAdapter<Post>(
-                    getActivity(),
-                    android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text1,
-                    result
+            setListAdapter(new PostAdapter(
+                getActivity(),
+                R.layout.posts,
+                result
             ));
+
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 }

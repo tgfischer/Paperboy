@@ -1,6 +1,8 @@
 package com.fischer.tom.reddiator.content;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import android.util.Log;
@@ -13,6 +15,7 @@ import com.fischer.tom.reddiator.content.RedditData;
  */
 public class Posts {
     private final String URL_TEMPLATE = "http://www.reddit.com/r/SUBREDDIT_NAME/.json?after=AFTER";
+    public static HashMap<Integer, Post> DATA = new HashMap<Integer, Post>();
 
     private String url;
     private String after;
@@ -40,6 +43,8 @@ public class Posts {
 
             after = data.getString("after");
 
+            int listSize = list.size();
+
             for(int i = 0; i < children.length(); i++){
                 JSONObject child = children.getJSONObject(i).getJSONObject("data");
 
@@ -57,6 +62,7 @@ public class Posts {
 
                 if(post.getTitle() != null) {
                     list.add(post);
+                    DATA.put(i + listSize, post);
                 }
             }
         }catch(Exception e){

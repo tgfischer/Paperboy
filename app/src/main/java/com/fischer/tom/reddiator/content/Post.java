@@ -4,7 +4,7 @@ package com.fischer.tom.reddiator.content;
  * Created by Tom on 2015-03-31.
  */
 public class Post {
-    private String subReddit;
+    private String subreddit;
     private String title;
     private String author;
     private int points;
@@ -14,8 +14,8 @@ public class Post {
     private String domain;
     private String id;
 
-    public Post(String subReddit, String title, String author, int points, int numComments, String permalink, String url, String domain, String id) {
-        this.subReddit = subReddit;
+    public Post(String subreddit, String title, String author, int points, int numComments, String permalink, String url, String domain, String id) {
+        this.subreddit = subreddit;
         this.title = title;
         this.author = author;
         this.points = points;
@@ -28,11 +28,11 @@ public class Post {
 
     @Override
     public String toString(){
-        return this.title + " - Posted by: " + this.author + " in " + this.subReddit;
+        return this.title + " - Posted by: " + this.author + " in " + this.subreddit;
     }
 
     public String getSubreddit() {
-        return this.subReddit;
+        return this.subreddit;
     }
 
     public String getTitle() {
@@ -40,7 +40,7 @@ public class Post {
     }
 
     public String getAuthor() {
-        return this.title;
+        return this.author;
     }
 
     public int getPoints() {
