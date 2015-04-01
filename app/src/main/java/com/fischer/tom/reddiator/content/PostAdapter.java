@@ -54,7 +54,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         holder.postTitleTextView.setText(post.getTitle());
         holder.usernameTextView.setText(post.getAuthor());
-        holder.subredditTextView.setText(post.getSubreddit());
+        holder.subredditTextView.setText("r/" + post.getSubreddit());
 
         String numComments = post.getNumComments() > 999 ?
                 Double.toString((double)Math.round(post.getNumComments() / 100) / 10) + "K" :

@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -31,6 +32,9 @@ import com.fischer.tom.reddiator.content.Posts;
 public class ItemListFragment extends ListFragment {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    public Posts mPosts;
+    private ListView mListView;
+    private int mLastPostIndex = -1;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -92,7 +96,18 @@ public class ItemListFragment extends ListFragment {
         this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mLastPostIndex = -1;
+                mPosts.clearPosts();
                 new GetPostsOperation().execute("AskReddit");
+            }
+        });
+
+        this.mListView = (ListView) view.findViewById(android.R.id.list);
+        this.mListView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                mLastPostIndex = mListView.getFirstVisiblePosition();
+                new GetPostsOperation().execute("AskReddit", "more");
             }
         });
 
@@ -176,7 +191,15 @@ public class ItemListFragment extends ListFragment {
     public class GetPostsOperation extends AsyncTask<String, Void, ArrayList<Post>> {
         @Override
         protected ArrayList<Post> doInBackground(String... params) {
-            return new Posts(params[0]).fetchPosts();
+            if (mPosts == null) {
+                mPosts = new Posts(params[0]);
+            }
+
+            if (params.length > 1) {
+                return mPosts.fetchMorePosts();
+            } else {
+                return mPosts.fetchPosts();
+            }
         }
 
         @Override
@@ -187,6 +210,7 @@ public class ItemListFragment extends ListFragment {
                 result
             ));
 
+            mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }

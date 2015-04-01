@@ -19,31 +19,34 @@ public class Posts {
 
     private String url;
     private String after;
-    private String subReddit;
+    private String subreddit;
+    private ArrayList<Post> mPosts;
 
-    public Posts(String subReddit) {
-        this.subReddit = subReddit;
+    public Posts(String subreddit) {
+        this.subreddit = subreddit;
         this.after = "";
         this.generateURL();
     }
 
     private void generateURL(){
-        url = URL_TEMPLATE.replace("SUBREDDIT_NAME", this.subReddit);
+        url = URL_TEMPLATE.replace("SUBREDDIT_NAME", this.subreddit);
         url = url.replace("AFTER", this.after);
     }
 
     public ArrayList<Post> fetchPosts(){
         String rawData = RedditData.getJSON(url);
 
-        ArrayList<Post> list=new ArrayList<Post>();
+        if (this.mPosts == null) {
+            this.mPosts = new ArrayList<Post> ();
+        }
 
         try{
             JSONObject data = new JSONObject(rawData).getJSONObject("data");
             JSONArray children = data.getJSONArray("children");
 
-            after = data.getString("after");
+            this.after = data.getString("after");
 
-            int listSize = list.size();
+            int listSize = this.mPosts.size();
 
             for(int i = 0; i < children.length(); i++){
                 JSONObject child = children.getJSONObject(i).getJSONObject("data");
@@ -61,7 +64,7 @@ public class Posts {
                 );
 
                 if(post.getTitle() != null) {
-                    list.add(post);
+                    this.mPosts.add(post);
                     DATA.put(i + listSize, post);
                 }
             }
@@ -69,11 +72,15 @@ public class Posts {
             Log.e("fetchPosts()",e.toString());
         }
 
-        return list;
+        return this.mPosts;
     }
 
     public ArrayList<Post> fetchMorePosts(){
         this.generateURL();
         return this.fetchPosts();
+    }
+
+    public void clearPosts() {
+        this.mPosts = null;
     }
 }

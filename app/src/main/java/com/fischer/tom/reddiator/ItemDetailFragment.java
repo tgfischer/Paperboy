@@ -2,6 +2,7 @@ package com.fischer.tom.reddiator;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,9 @@ public class ItemDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
 
-            String test = getArguments().getString(ARG_ITEM_ID);
+            Log.d("Test", ARG_ITEM_ID);
 
-            mItem = Posts.DATA.get(test);
+            mItem = Posts.DATA.get(getArguments().getString(ARG_ITEM_ID));
 
         }
     }
