@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.fischer.tom.reddiator.content.RedditCache;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,7 +22,6 @@ public class ImageLoader extends AsyncTask<URI,Integer,Bitmap> {
     private URI imageUri;
 
     private ImageView imageView;
-
     private int preferredWidth = 80;
     private int preferredHeight = 80;
 

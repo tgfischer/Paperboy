@@ -8,9 +8,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ public class ItemListFragment extends ListFragment {
     public Posts mPosts;
     private ListView mListView;
     private int mLastPostIndex = -1;
+    private boolean mListShown;
+    private View mProgressContainer;
+    private View mListContainer;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -90,7 +95,12 @@ public class ItemListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.posts_content, null);
+        View view = inflater.inflate(R.layout.posts_content, container, false);
+        (view.findViewById(R.id.internalEmpty)).setId(0x00ff0001);
+        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListContainer =  view.findViewById(R.id.listContainer);
+        mProgressContainer = view.findViewById(R.id.progressContainer);
+        mListShown = true;
 
         this.mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -98,7 +108,7 @@ public class ItemListFragment extends ListFragment {
             public void onRefresh() {
                 mLastPostIndex = -1;
                 mPosts.clearPosts();
-                new GetPostsOperation().execute("TodayILearned");
+                new GetPostsOperation(true).execute("TodayILearned");
             }
         });
 
@@ -107,13 +117,18 @@ public class ItemListFragment extends ListFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mLastPostIndex = mListView.getFirstVisiblePosition();
-                new GetPostsOperation().execute("TodayILearned", "more");
+                new GetPostsOperation(true).execute("TodayILearned", "more");
             }
         });
 
-        new GetPostsOperation().execute("TodayILearned");
+        new GetPostsOperation(false).execute("TodayILearned");
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -188,7 +203,40 @@ public class ItemListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
+    public void setListShown(boolean shown, boolean animate){
+        if (mListShown == shown) {
+            return;
+        }
+        mListShown = shown;
+        if (shown) {
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            }
+            mProgressContainer.setVisibility(View.GONE);
+            mListContainer.setVisibility(View.VISIBLE);
+        } else {
+            if (animate) {
+                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            }
+            mProgressContainer.setVisibility(View.VISIBLE);
+            mListContainer.setVisibility(View.INVISIBLE);
+        }
+    }
+    public void setListShown(boolean shown){
+        setListShown(shown, true);
+    }
+    public void setListShownNoAnimation(boolean shown) {
+        setListShown(shown, false);
+    }
+
     public class GetPostsOperation extends AsyncTask<String, Void, ArrayList<Post>> {
+        public GetPostsOperation(boolean showLoading) {
+            super();
+            setListShown(showLoading);
+        }
+
         @Override
         protected ArrayList<Post> doInBackground(String... params) {
             if (mPosts == null) {
@@ -212,6 +260,7 @@ public class ItemListFragment extends ListFragment {
 
             mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
+            setListShown(true);
         }
     }
 }
