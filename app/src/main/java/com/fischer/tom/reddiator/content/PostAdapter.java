@@ -1,6 +1,9 @@
 package com.fischer.tom.reddiator.content;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
 import android.view.View;
@@ -8,8 +11,11 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.app.Activity;
 
+import com.fischer.tom.reddiator.ImageLoader;
 import com.fischer.tom.reddiator.R;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +48,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.usernameTextView = (TextView)row.findViewById(R.id.usernameTextView);
             holder.subredditTextView = (TextView)row.findViewById(R.id.subredditTextView);
             holder.numCommentsTextView = (TextView)row.findViewById(R.id.numCommentsTextView);
+            holder.thumbnailImageView = (ImageView)row.findViewById(R.id.thumbnailImageView);
 
             row.setTag(holder);
         }
@@ -62,6 +69,12 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         holder.numCommentsTextView.setText(numComments);
 
+        try {
+            new ImageLoader(new URI(post.getThumbnail()), holder.thumbnailImageView, 50, 38).execute();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
         return row;
     }
 
@@ -71,5 +84,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView usernameTextView;
         TextView subredditTextView;
         TextView numCommentsTextView;
+        ImageView thumbnailImageView;
     }
 }

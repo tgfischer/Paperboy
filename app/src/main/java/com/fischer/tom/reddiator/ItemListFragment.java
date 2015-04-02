@@ -98,7 +98,7 @@ public class ItemListFragment extends ListFragment {
             public void onRefresh() {
                 mLastPostIndex = -1;
                 mPosts.clearPosts();
-                new GetPostsOperation().execute("AskReddit");
+                new GetPostsOperation().execute("TodayILearned");
             }
         });
 
@@ -107,11 +107,11 @@ public class ItemListFragment extends ListFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mLastPostIndex = mListView.getFirstVisiblePosition();
-                new GetPostsOperation().execute("AskReddit", "more");
+                new GetPostsOperation().execute("TodayILearned", "more");
             }
         });
 
-        new GetPostsOperation().execute("AskReddit");
+        new GetPostsOperation().execute("TodayILearned");
 
         return view;
     }

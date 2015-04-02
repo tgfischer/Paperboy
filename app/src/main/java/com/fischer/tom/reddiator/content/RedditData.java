@@ -35,6 +35,22 @@ public class RedditData {
     }
 
     public static String getJSON(String url){
+
+        //Check if the cache contains data for this URL
+
+        byte[] t = RedditCache.read(url);
+        String cached = null;
+
+        if(t != null) {
+            cached = new String(t);
+            t = null;
+        }
+
+        if(cached != null) {
+            Log.d("MSG","Using cache for " + url);
+            return cached;
+        }
+
         HttpURLConnection connection = getConnection(url);
 
         if (connection == null) {

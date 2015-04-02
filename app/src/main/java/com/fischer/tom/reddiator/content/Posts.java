@@ -60,7 +60,8 @@ public class Posts {
                     child.optString("permalink"),
                     child.optString("url"),
                     child.optString("domain"),
-                    child.optString("id")
+                    child.optString("id"),
+                    child.optString("thumbnail")
                 );
 
                 if(post.getTitle() != null) {
@@ -68,8 +69,8 @@ public class Posts {
                     DATA.put(i + listSize, post);
                 }
             }
-        }catch(Exception e){
-            Log.e("fetchPosts()",e.toString());
+        } catch(Exception e) {
+            Log.e("fetchPosts()", e.toString());
         }
 
         return this.mPosts;
@@ -81,6 +82,8 @@ public class Posts {
     }
 
     public void clearPosts() {
+        this.after = "";
         this.mPosts = null;
+        this.generateURL();
     }
 }

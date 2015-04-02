@@ -13,8 +13,9 @@ public class Post {
     private String url;
     private String domain;
     private String id;
+    private String thumbnail;
 
-    public Post(String subreddit, String title, String author, int points, int numComments, String permalink, String url, String domain, String id) {
+    public Post(String subreddit, String title, String author, int points, int numComments, String permalink, String url, String domain, String id, String thumbnail) {
         this.subreddit = subreddit;
         this.title = title;
         this.author = author;
@@ -24,6 +25,7 @@ public class Post {
         this.url = url;
         this.domain = domain;
         this.id = id;
+        this.thumbnail = thumbnail;
     }
 
     @Override
@@ -65,5 +67,9 @@ public class Post {
 
     public String getID() {
         return this.id;
+    }
+
+    public String getThumbnail() {
+        return this.thumbnail;
     }
 }
