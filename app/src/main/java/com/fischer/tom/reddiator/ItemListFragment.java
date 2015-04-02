@@ -14,6 +14,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,7 @@ public class ItemListFragment extends ListFragment {
     private boolean mListShown;
     private View mProgressContainer;
     private View mListContainer;
+    private View mView;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -95,14 +97,14 @@ public class ItemListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.posts_content, container, false);
-        (view.findViewById(R.id.internalEmpty)).setId(0x00ff0001);
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        mListContainer =  view.findViewById(R.id.listContainer);
-        mProgressContainer = view.findViewById(R.id.progressContainer);
+        this.mView = inflater.inflate(R.layout.posts_content, container, false);
+        (this.mView.findViewById(R.id.internalEmpty)).setId(0x00ff0001);
+        mListView = (ListView) this.mView.findViewById(android.R.id.list);
+        mListContainer =  this.mView.findViewById(R.id.listContainer);
+        mProgressContainer = this.mView.findViewById(R.id.progressContainer);
         mListShown = true;
 
-        this.mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        this.mSwipeRefreshLayout = (SwipeRefreshLayout) this.mView.findViewById(R.id.swipeRefreshLayout);
         this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -112,7 +114,7 @@ public class ItemListFragment extends ListFragment {
             }
         });
 
-        this.mListView = (ListView) view.findViewById(android.R.id.list);
+        this.mListView = (ListView) this.mView.findViewById(android.R.id.list);
         this.mListView.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
@@ -123,7 +125,7 @@ public class ItemListFragment extends ListFragment {
 
         new GetPostsOperation(false).execute("TodayILearned");
 
-        return view;
+        return this.mView;
     }
 
     @Override
@@ -257,6 +259,14 @@ public class ItemListFragment extends ListFragment {
                 R.layout.posts,
                 result
             ));
+
+            RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.empty);
+
+            if (result.size() == 0) {
+                relativeLayout.setVisibility(View.VISIBLE);
+            } else {
+                relativeLayout.setVisibility(View.GONE);
+            }
 
             mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
