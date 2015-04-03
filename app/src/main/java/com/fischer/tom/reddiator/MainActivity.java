@@ -19,6 +19,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.fischer.tom.reddiator.content.Subreddits;
+
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ItemListFragment.Callbacks {
@@ -73,7 +75,20 @@ public class MainActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        switch (position) {
+        Bundle bundle = new Bundle();
+
+        String subreddit = Subreddits.get(position);
+
+        bundle.putString("subreddit", subreddit);
+
+        ItemListFragment itemListFragment = new ItemListFragment();
+        itemListFragment.setArguments(bundle);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, itemListFragment)
+                .commit();
+
+        /*switch (position) {
             case 0:
                 // Front Page
                 fragmentManager.beginTransaction()
@@ -82,8 +97,9 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 1:
                 // All
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, new ItemListFragment())
+                        .commit();
                 break;
             case 2:
                 // AskReddit
@@ -91,7 +107,7 @@ public class MainActivity extends ActionBarActivity
                         .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                         .commit();
                 break;
-        }
+        }*/
     }
 
     public void onSectionAttached(int number) {

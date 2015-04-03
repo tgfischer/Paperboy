@@ -42,6 +42,7 @@ public class ItemListFragment extends ListFragment {
     private View mProgressContainer;
     private View mListContainer;
     private View mView;
+    private String mSubreddit = "todayilearned";
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -86,8 +87,7 @@ public class ItemListFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemListFragment() {
-    }
+    public ItemListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,8 @@ public class ItemListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        this.mSubreddit = this.getArguments().getString("subreddit");
+
         this.mView = inflater.inflate(R.layout.posts_content, container, false);
         (this.mView.findViewById(R.id.internalEmpty)).setId(0x00ff0001);
         mListView = (ListView) this.mView.findViewById(android.R.id.list);
@@ -110,7 +112,7 @@ public class ItemListFragment extends ListFragment {
             public void onRefresh() {
                 mLastPostIndex = -1;
                 mPosts.clearPosts();
-                new GetPostsOperation(true).execute("TodayILearned");
+                new GetPostsOperation(true).execute(mSubreddit);
             }
         });
 
@@ -119,11 +121,11 @@ public class ItemListFragment extends ListFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mLastPostIndex = mListView.getFirstVisiblePosition();
-                new GetPostsOperation(true).execute("TodayILearned", "more");
+                new GetPostsOperation(true).execute(mSubreddit, "more");
             }
         });
 
-        new GetPostsOperation(false).execute("TodayILearned");
+        new GetPostsOperation(false).execute(mSubreddit);
 
         return this.mView;
     }
