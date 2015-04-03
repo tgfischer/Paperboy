@@ -49,6 +49,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.subredditTextView = (TextView)row.findViewById(R.id.subredditTextView);
             holder.numCommentsTextView = (TextView)row.findViewById(R.id.numCommentsTextView);
             holder.thumbnailImageView = (ImageView)row.findViewById(R.id.thumbnailImageView);
+            holder.scoreTextView = (TextView)row.findViewById(R.id.scoreTextView);
 
             row.setTag(holder);
         }
@@ -67,7 +68,13 @@ public class PostAdapter extends ArrayAdapter<Post> {
                 Double.toString((double)Math.round(post.getNumComments() / 100) / 10) + "K" :
                 Integer.toString(post.getNumComments());
 
-        holder.numCommentsTextView.setText(numComments);
+        holder.numCommentsTextView.setText(numComments + " comments");
+
+        String score = post.getNumComments() > 999 ?
+                Double.toString((double)Math.round(post.getPoints() / 100) / 10) + "K" :
+                Integer.toString(post.getPoints());
+
+        holder.scoreTextView.setText(score);
 
         try {
             new ImageLoader(new URI(post.getThumbnail()), holder.thumbnailImageView, 50, 38).execute();
@@ -85,5 +92,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView subredditTextView;
         TextView numCommentsTextView;
         ImageView thumbnailImageView;
+        TextView scoreTextView;
     }
 }

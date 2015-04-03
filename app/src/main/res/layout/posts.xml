@@ -3,18 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relativeLayout"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants">
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="38dp"
-        android:id="@+id/thumbnailImageView"
-        android:layout_below="@+id/subredditTextView"
-        android:layout_alignParentStart="true"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:src="@drawable/blank_thumbnail"
-        android:layout_marginRight="10dp"
-        android:scaleType="fitCenter"/>
+        android:layout_alignParentStart="true"
+        android:id="@+id/leftLayout">
+
+        <ImageButton
+            android:layout_width="40px"
+            android:layout_height="36px"
+            android:id="@+id/upVoteImageButton"
+            android:background="@drawable/up_arrow"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/imageButton"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0"
+            android:id="@+id/scoreTextView"
+            android:layout_below="@+id/upVoteImageButton"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:layout_width="40px"
+            android:layout_height="36px"
+            android:id="@+id/imageButton"
+            android:background="@drawable/down_arrow"
+            android:layout_below="@+id/scoreTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp" />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,8 +51,9 @@
         android:id="@+id/postTitleTextView"
         android:textColor="#ff212121"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/thumbnailImageView"
-        android:layout_toLeftOf="@+id/numCommentsTextView"/>
+        android:layout_toEndOf="@id/leftLayout"
+        android:layout_toLeftOf="@+id/thumbnailImageView"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,8 +63,7 @@
         android:id="@+id/subredditTextView"
         android:textColor="#616161"
         android:layout_below="@+id/postTitleTextView"
-        android:layout_toEndOf="@+id/thumbnailImageView"
-        android:layout_marginTop="5dp" />
+        android:layout_alignStart="@+id/postTitleTextView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -53,10 +80,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0"
+        android:text="0 comments"
+        android:textColor="#9E9E9E"
         android:id="@+id/numCommentsTextView"
+        android:layout_below="@+id/subredditTextView"
+        android:layout_alignStart="@+id/subredditTextView" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="38dp"
+        android:id="@+id/thumbnailImageView"
+        android:src="@drawable/blank_thumbnail"
+        android:layout_marginRight="10dp"
+        android:scaleType="fitCenter"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="10dp" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

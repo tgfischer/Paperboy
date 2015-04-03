@@ -84,30 +84,11 @@ public class MainActivity extends ActionBarActivity
         ItemListFragment itemListFragment = new ItemListFragment();
         itemListFragment.setArguments(bundle);
 
+        mTitle = subreddit;
+
         fragmentManager.beginTransaction()
                 .replace(R.id.container, itemListFragment)
                 .commit();
-
-        /*switch (position) {
-            case 0:
-                // Front Page
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new ItemListFragment())
-                        .commit();
-                break;
-            case 1:
-                // All
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, new ItemListFragment())
-                        .commit();
-                break;
-            case 2:
-                // AskReddit
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                        .commit();
-                break;
-        }*/
     }
 
     public void onSectionAttached(int number) {
