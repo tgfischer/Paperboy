@@ -45,6 +45,7 @@ public class ImageLoader extends AsyncTask<URI,Integer,Bitmap> {
         final Bitmap cachedBitmap = BitmapCache.getBitmapFromMemCache(url);
 
         if (cachedBitmap != null) {
+            System.out.println("Found cached bitmap. Using it instead");
             return cachedBitmap;
         }
 

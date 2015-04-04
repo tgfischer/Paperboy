@@ -72,7 +72,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         holder.numCommentsTextView.setText(numComments + " comments");
 
-        String score = post.getNumComments() > 999 ?
+        String score = post.getPoints() > 9999 ?
                 Double.toString((double)Math.round(post.getPoints() / 100) / 10) + "K" :
                 Integer.toString(post.getPoints());
 

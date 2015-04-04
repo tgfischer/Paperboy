@@ -15,6 +15,7 @@ import com.fischer.tom.reddiator.content.RedditData;
  */
 public class Posts {
     private final String URL_TEMPLATE = "http://www.reddit.com/r/SUBREDDIT_NAME/.json?after=AFTER";
+    private final String FRONT_PAGE = "http://www.reddit.com/.json?after=AFTER";
     public static HashMap<Integer, Post> DATA = new HashMap<Integer, Post>();
 
     private String url;
@@ -29,7 +30,12 @@ public class Posts {
     }
 
     private void generateURL(){
-        url = URL_TEMPLATE.replace("SUBREDDIT_NAME", this.subreddit);
+        if (this.subreddit.equals("Front Page")) {
+            url = FRONT_PAGE;
+        } else {
+            url = URL_TEMPLATE.replace("SUBREDDIT_NAME", this.subreddit);
+        }
+
         url = url.replace("AFTER", this.after);
     }
 

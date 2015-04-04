@@ -8,9 +8,11 @@ import java.util.HashMap;
  */
 public class Subreddits {
     private static ArrayList<String> mSubredditsList = new ArrayList<String>();
-    private static HashMap<Integer, String> mSubredditsMap = new HashMap<Integer, String>();
 
     static {
+        mSubredditsList.add("Front Page");
+        mSubredditsList.add("All");
+        //mSubredditsList.add("New");
         mSubredditsList.add("announcements");
         mSubredditsList.add("Art");
         mSubredditsList.add("AskReddit");
