@@ -1,9 +1,11 @@
 package com.fischer.tom.reddiator;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.support.v4.app.ListFragment;
+import android.support.v4.util.LruCache;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.LayoutInflater;

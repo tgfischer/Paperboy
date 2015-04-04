@@ -1,12 +1,15 @@
 package com.fischer.tom.reddiator;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.fischer.tom.reddiator.content.BitmapCache;
 import com.fischer.tom.reddiator.content.RedditCache;
 
 import org.apache.http.HttpResponse;
@@ -32,11 +35,18 @@ public class ImageLoader extends AsyncTask<URI,Integer,Bitmap> {
         this.preferredHeight = scaleHeight;
     }
 
+    @Override
     public Bitmap doInBackground(URI... params) {
         if(imageUri == null) return null;
         String url = imageUri.toString();
 
         if(url.length() == 0 || !url.contains("redditmedia")) return null;
+
+        final Bitmap cachedBitmap = BitmapCache.getBitmapFromMemCache(url);
+
+        if (cachedBitmap != null) {
+            return cachedBitmap;
+        }
 
         HttpGet httpGet = new HttpGet(url);
         DefaultHttpClient client = new DefaultHttpClient();
@@ -46,11 +56,9 @@ public class ImageLoader extends AsyncTask<URI,Integer,Bitmap> {
             InputStream is = new BufferedInputStream( response.getEntity().getContent() );
 
             Bitmap bitmap = BitmapFactory.decodeStream(is);
-            //if (preferredWidth > 0 && preferredHeight > 0 && bitmap.getWidth() > preferredWidth && bitmap.getHeight() > preferredHeight) {
-                //return Bitmap.createScaledBitmap(bitmap, preferredWidth, preferredHeight, false);
-            //} else {
-                return bitmap;
-            //}
+            BitmapCache.addBitmapToMemoryCache(url, bitmap);
+
+            return bitmap;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +66,8 @@ public class ImageLoader extends AsyncTask<URI,Integer,Bitmap> {
         return null;
     }
 
-    public void onPostExecute( Bitmap drawable ) {
+    @Override
+    public void onPostExecute(Bitmap drawable) {
         if (drawable == null) {
             imageView.setImageResource(R.drawable.blank_thumbnail);
         } else {

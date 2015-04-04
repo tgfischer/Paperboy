@@ -3,7 +3,7 @@
     android:layout_height="fill_parent"
     android:layout_width="fill_parent">
 
-    <item android:state_activated="true" android:drawable="@color/GoogleBlue" />
-    <item android:drawable="@color/GoogleGrey" />
+    <item android:state_activated="true" android:drawable="@color/Blue500" />
+    <item android:drawable="@color/Grey900" />
 
 </selector>

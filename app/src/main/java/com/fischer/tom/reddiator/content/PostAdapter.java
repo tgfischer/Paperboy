@@ -1,7 +1,10 @@
 package com.fischer.tom.reddiator.content;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.support.v4.util.LruCache;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +40,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder holder = null;
+        Post post = data.get(position);
 
         if(row == null)
         {
@@ -57,8 +61,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         {
             holder = (ViewHolder)row.getTag();
         }
-
-        Post post = data.get(position);
 
         holder.postTitleTextView.setText(post.getTitle());
         holder.usernameTextView.setText(post.getAuthor());

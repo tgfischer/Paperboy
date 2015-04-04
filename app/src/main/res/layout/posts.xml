@@ -72,9 +72,8 @@
         android:text="Username"
         android:id="@+id/usernameTextView"
         android:textColor="#9E9E9E"
-        android:layout_marginLeft="15dp"
-        android:layout_alignTop="@+id/subredditTextView"
-        android:layout_toEndOf="@+id/subredditTextView" />
+        android:layout_below="@+id/subredditTextView"
+        android:layout_alignStart="@+id/subredditTextView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,17 +82,18 @@
         android:text="0 comments"
         android:textColor="#9E9E9E"
         android:id="@+id/numCommentsTextView"
-        android:layout_below="@+id/subredditTextView"
-        android:layout_alignStart="@+id/subredditTextView" />
+        android:layout_marginLeft="10dp"
+        android:layout_alignTop="@+id/subredditTextView"
+        android:layout_toEndOf="@+id/subredditTextView" />
 
     <ImageView
         android:layout_width="50dp"
         android:layout_height="38dp"
         android:id="@+id/thumbnailImageView"
         android:src="@drawable/blank_thumbnail"
-        android:layout_marginRight="10dp"
         android:scaleType="fitCenter"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="10dp" />
 
 </RelativeLayout>
