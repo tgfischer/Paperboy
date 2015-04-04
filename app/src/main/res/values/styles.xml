@@ -5,6 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="colorPrimary">@color/GoogleBlue</item>
+        <item name="colorPrimaryDark">@color/GoogleBlue</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
