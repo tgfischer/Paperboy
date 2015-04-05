@@ -3,6 +3,7 @@ package com.fischer.tom.reddiator.content;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.widget.ArrayAdapter;
@@ -28,12 +29,19 @@ public class PostAdapter extends ArrayAdapter<Post> {
     private final Context context;
     private final ArrayList<Post> data;
     private final int layoutResourceId;
+    private DBAdapter dbAdapter;
 
     public PostAdapter(Context context, int layoutResourceId, ArrayList<Post> data) {
         super(context, layoutResourceId, data);
         this.context = context;
         this.data = data;
         this.layoutResourceId = layoutResourceId;
+        this.dbAdapter = Database.getInstance(this.context);
+    }
+
+    public void updateList(ArrayList<Post> data) {
+        this.data.clear();
+        this.data.addAll(data);
     }
 
     @Override
@@ -61,6 +69,14 @@ public class PostAdapter extends ArrayAdapter<Post> {
         else
         {
             holder = (ViewHolder)row.getTag();
+        }
+
+        if (this.dbAdapter.containsURL(post.getPermalink())) {
+            row.setBackgroundColor(context.getResources().getColor(R.color.Grey100));
+            holder.postTitleTextView.setTextColor(context.getResources().getColor(R.color.Grey700));
+        } else {
+            row.setBackgroundColor(Color.WHITE);
+            holder.postTitleTextView.setTextColor(context.getResources().getColor(R.color.Grey900));
         }
 
         String score = post.getPoints() > 9999 ?

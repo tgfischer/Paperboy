@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
+import com.fischer.tom.reddiator.content.DBAdapter;
+import com.fischer.tom.reddiator.content.Database;
 import com.fischer.tom.reddiator.content.Post;
 import com.fischer.tom.reddiator.content.PostAdapter;
 import com.fischer.tom.reddiator.content.Posts;
@@ -44,7 +46,9 @@ public class ItemListFragment extends ListFragment {
     private View mProgressContainer;
     private View mListContainer;
     private View mView;
-    private String mSubreddit = "todayilearned";
+    private String mSubreddit = "Front Page";
+    private DBAdapter dbAdapter;
+    private PostAdapter mPostAdapter;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -100,6 +104,18 @@ public class ItemListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         this.mSubreddit = this.getArguments().getString("subreddit");
+
+        dbAdapter = Database.getInstance(getActivity());
+        this.mPostAdapter = new PostAdapter(getActivity(), R.layout.posts, new ArrayList<Post>());
+
+        new AsyncTask<String, Void, Void>() {
+            @Override
+            protected Void doInBackground(String... params) {
+                setListAdapter(mPostAdapter);
+
+                return null;
+            }
+        }.execute();
 
         this.mView = inflater.inflate(R.layout.posts_content, container, false);
         (this.mView.findViewById(R.id.internalEmpty)).setId(0x00ff0001);
@@ -172,10 +188,10 @@ public class ItemListFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
-        // Notify the active callbacks interface (the activity, if the
-        // fragment is attached to one) that an item has been selected.
-        //mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
-        mCallbacks.onItemSelected(Posts.DATA.get(position).getID());
+        Post post = Posts.DATA.get(position);
+        dbAdapter.insertRow(post.getPermalink());
+        mPostAdapter.notifyDataSetChanged();
+        mCallbacks.onItemSelected(post.getID());
     }
 
     @Override
@@ -258,11 +274,9 @@ public class ItemListFragment extends ListFragment {
 
         @Override
         protected void onPostExecute(ArrayList<Post> result) {
-            setListAdapter(new PostAdapter(
-                getActivity(),
-                R.layout.posts,
-                result
-            ));
+            mPostAdapter.updateList(result);
+            mPostAdapter.notifyDataSetChanged();
+            //setListAdapter(mPostAdapter);
 
             RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.empty);
 
@@ -272,7 +286,7 @@ public class ItemListFragment extends ListFragment {
                 relativeLayout.setVisibility(View.GONE);
             }
 
-            mListView.setSelectionFromTop(mLastPostIndex, 0);
+            //mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
             setListShown(true);
         }

@@ -19,6 +19,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.fischer.tom.reddiator.content.DBAdapter;
+import com.fischer.tom.reddiator.content.Database;
+import com.fischer.tom.reddiator.content.Post;
+import com.fischer.tom.reddiator.content.Posts;
 import com.fischer.tom.reddiator.content.Subreddits;
 
 
@@ -40,6 +44,7 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private DBAdapter dbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,15 @@ public class MainActivity extends ActionBarActivity
                     .setActivateOnItemClick(true);
         }
 
+        dbAdapter = Database.getInstance(this);
+        dbAdapter.open();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        dbAdapter.close();
     }
 
     @Override
