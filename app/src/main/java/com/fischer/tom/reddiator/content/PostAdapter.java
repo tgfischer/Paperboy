@@ -54,6 +54,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.numCommentsTextView = (TextView)row.findViewById(R.id.numCommentsTextView);
             holder.thumbnailImageView = (ImageView)row.findViewById(R.id.thumbnailImageView);
             holder.scoreTextView = (TextView)row.findViewById(R.id.scoreTextView);
+            holder.timestampTextView = (TextView)row.findViewById(R.id.timestampTextView);
 
             row.setTag(holder);
         }
@@ -62,8 +63,13 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder = (ViewHolder)row.getTag();
         }
 
+        String score = post.getPoints() > 9999 ?
+                Double.toString((double)Math.round(post.getPoints() / 100) / 10) + "K" :
+                Integer.toString(post.getPoints());
+
+        holder.scoreTextView.setText(score);
+
         holder.postTitleTextView.setText(post.getTitle());
-        holder.usernameTextView.setText(post.getAuthor());
         holder.subredditTextView.setText("r/" + post.getSubreddit());
 
         String numComments = post.getNumComments() > 999 ?
@@ -71,12 +77,8 @@ public class PostAdapter extends ArrayAdapter<Post> {
                 Integer.toString(post.getNumComments());
 
         holder.numCommentsTextView.setText(numComments + " comments");
-
-        String score = post.getPoints() > 9999 ?
-                Double.toString((double)Math.round(post.getPoints() / 100) / 10) + "K" :
-                Integer.toString(post.getPoints());
-
-        holder.scoreTextView.setText(score);
+        holder.usernameTextView.setText("by " + post.getAuthor());
+        holder.timestampTextView.setText(post.calculateTimestamp(System.currentTimeMillis() / 1000L));
 
         try {
             new ImageLoader(new URI(post.getThumbnail()), holder.thumbnailImageView, 50, 38).execute();
@@ -95,5 +97,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView numCommentsTextView;
         ImageView thumbnailImageView;
         TextView scoreTextView;
+        TextView timestampTextView;
     }
 }

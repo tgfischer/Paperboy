@@ -67,7 +67,8 @@ public class Posts {
                     child.optString("url"),
                     child.optString("domain"),
                     child.optString("id"),
-                    child.optString("thumbnail")
+                    child.optString("thumbnail"),
+                    child.optDouble("created_utc")
                 );
 
                 if(post.getTitle() != null) {
