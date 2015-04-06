@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fischer.tom.reddiator.content.Post;
@@ -13,6 +14,9 @@ import com.fischer.tom.reddiator.content.Posts;
 
 
 import com.fischer.tom.reddiator.dummy.DummyContent;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -30,7 +34,7 @@ public class ItemDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private Post mItem;
+    private Post mPost;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,10 +52,7 @@ public class ItemDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
 
-            Log.d("Test", ARG_ITEM_ID);
-
-            mItem = Posts.DATA.get(getArguments().getString(ARG_ITEM_ID));
-
+            mPost = Posts.DATA.get(Integer.parseInt(getArguments().getString(ARG_ITEM_ID)));
         }
     }
 
@@ -61,8 +62,29 @@ public class ItemDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.getTitle());
+        if (mPost != null) {
+            String score = mPost.getPoints() > 9999 ?
+                    Double.toString((double)Math.round(mPost.getPoints() / 100) / 10) + "K" :
+                    Integer.toString(mPost.getPoints());
+
+            ((TextView) rootView.findViewById(R.id.scoreTextView)).setText(score);
+
+            ((TextView) rootView.findViewById(R.id.postTitleTextView)).setText(mPost.getTitle());
+            ((TextView) rootView.findViewById(R.id.subredditTextView)).setText("r/" + mPost.getSubreddit());
+
+            String numComments = mPost.getNumComments() > 999 ?
+                    Double.toString((double)Math.round(mPost.getNumComments() / 100) / 10) + "K" :
+                    Integer.toString(mPost.getNumComments());
+
+            ((TextView) rootView.findViewById(R.id.numCommentsTextView)).setText(numComments + " comments");
+            ((TextView) rootView.findViewById(R.id.usernameTextView)).setText("by " + mPost.getAuthor());
+            ((TextView) rootView.findViewById(R.id.timestampTextView)).setText(mPost.calculateTimestamp(System.currentTimeMillis() / 1000L));
+
+            try {
+                new ImageLoader(new URI(mPost.getThumbnail()), ((ImageView) rootView.findViewById(R.id.thumbnailImageView)), 50, 38).execute();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
 
         return rootView;

@@ -1,5 +1,134 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/item_detail"
-    style="?android:attr/textAppearanceLarge" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="16dp" android:textIsSelectable="true"
-    tools:context="com.fischer.tom.reddiator.ItemDetailFragment" />
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootRelativeLayout"
+    android:background="@android:color/white">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/topRelativeLayout"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/leftLayout">
+
+            <ImageButton
+                android:layout_width="40px"
+                android:layout_height="36px"
+                android:id="@+id/upVoteImageButton"
+                android:background="@drawable/up_arrow"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/imageButton"
+                android:layout_marginBottom="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/scoreTextView"
+                android:layout_below="@+id/upVoteImageButton"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/Grey700" />
+
+            <ImageButton
+                android:layout_width="40px"
+                android:layout_height="36px"
+                android:id="@+id/imageButton"
+                android:background="@drawable/down_arrow"
+                android:layout_below="@+id/scoreTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Post Title"
+            android:id="@+id/postTitleTextView"
+            android:textColor="@color/Grey900"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/leftLayout"
+            android:layout_toLeftOf="@+id/thumbnailImageView"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Subreddit"
+            android:id="@+id/subredditTextView"
+            android:textColor="@color/Grey700"
+            android:layout_below="@+id/postTitleTextView"
+            android:layout_alignStart="@+id/postTitleTextView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0 comments"
+            android:textColor="@color/Grey700"
+            android:id="@+id/numCommentsTextView"
+            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@+id/subredditTextView"
+            android:layout_toEndOf="@+id/subredditTextView"
+            android:layout_toLeftOf="@+id/thumbnailImageView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="posted 0 seconds ago"
+            android:id="@+id/timestampTextView"
+            android:textColor="@color/Grey500"
+            android:layout_below="@+id/subredditTextView"
+            android:layout_alignStart="@+id/subredditTextView"
+            android:layout_toLeftOf="@+id/thumbnailImageView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Username"
+            android:id="@+id/usernameTextView"
+            android:textColor="@color/Grey500"
+            android:layout_below="@+id/timestampTextView"
+            android:layout_alignStart="@+id/timestampTextView"
+            android:layout_toLeftOf="@+id/thumbnailImageView"/>
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="56dp"
+            android:id="@+id/thumbnailImageView"
+            android:src="@drawable/blank_thumbnail"
+            android:scaleType="fitCenter"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/Grey200"
+        android:id="@+id/horizontalRule"
+        android:layout_below="@+id/topRelativeLayout"/>
+
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/commentsExpandableListView"
+        android:layout_below="@+id/horizontalRule"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

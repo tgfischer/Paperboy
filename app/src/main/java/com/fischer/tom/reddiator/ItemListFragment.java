@@ -191,7 +191,7 @@ public class ItemListFragment extends ListFragment {
         Post post = Posts.DATA.get(position);
         dbAdapter.insertRow(post.getPermalink());
         mPostAdapter.notifyDataSetChanged();
-        mCallbacks.onItemSelected(post.getID());
+        mCallbacks.onItemSelected(position + "");
     }
 
     @Override
