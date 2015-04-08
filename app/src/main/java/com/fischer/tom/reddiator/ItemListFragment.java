@@ -134,7 +134,7 @@ public class ItemListFragment extends ListFragment {
             }
         });
 
-        this.mListView = (ListView) this.mView.findViewById(android.R.id.list);
+        //this.mListView = (ListView) this.mView.findViewById(android.R.id.list);
         this.mListView.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
