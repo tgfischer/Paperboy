@@ -37,7 +37,66 @@ public class Comment {
     }
 
     public String calculateTimestamp(double now) {
-        return null;
+        String timestamp = "posted TIME UNITS ago";
+
+        Integer difference = (int)Math.round(now - this.timestamp);
+
+        if (difference < 60) {
+            timestamp = timestamp.replace("TIME", difference.toString());
+
+            if (difference < 2) {
+                timestamp = timestamp.replace("UNITS", "second");
+            } else {
+                timestamp = timestamp.replace("UNITS", "seconds");
+            }
+        } else if (difference < 60 * 60) {
+            Integer toMinutes = Math.round(difference / 60);
+            timestamp = timestamp.replace("TIME", toMinutes.toString());
+
+            if (toMinutes < 2) {
+                timestamp = timestamp.replace("UNITS", "minute");
+            } else {
+                timestamp = timestamp.replace("UNITS", "minutes");
+            }
+        }  else if (difference < 60 * 60 * 24) {
+            Integer toHours = Math.round(difference / (60 * 60));
+            timestamp = timestamp.replace("TIME", toHours.toString());
+
+            if (toHours < 2) {
+                timestamp = timestamp.replace("UNITS", "hour");
+            } else {
+                timestamp = timestamp.replace("UNITS", "hours");
+            }
+        }  else if (difference < 60 * 60 * 24 * 7) {
+            Integer toDays = Math.round(difference / (60 * 60 * 24));
+            timestamp = timestamp.replace("TIME", toDays.toString());
+
+            if (toDays < 2) {
+                timestamp = timestamp.replace("UNITS", "day");
+            } else {
+                timestamp = timestamp.replace("UNITS", "days");
+            }
+        }  else if (difference < 60 * 60 * 24 * 7 * 52) {
+            Integer toWeeks = Math.round(difference / (60 * 60 * 24 * 7));
+            timestamp = timestamp.replace("TIME", toWeeks.toString());
+
+            if (toWeeks < 2) {
+                timestamp = timestamp.replace("UNITS", "week");
+            } else {
+                timestamp = timestamp.replace("UNITS", "weeks");
+            }
+        } else {
+            Integer toYears = Math.round(difference / (60 * 60 * 24 * 365));
+            timestamp = timestamp.replace("TIME", toYears.toString());
+
+            if (toYears < 2) {
+                timestamp = timestamp.replace("UNITS", "year");
+            } else {
+                timestamp = timestamp.replace("UNITS", "years");
+            }
+        }
+
+        return timestamp;
     }
 
     public int getLevel() {

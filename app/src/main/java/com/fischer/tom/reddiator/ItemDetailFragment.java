@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,6 +153,13 @@ public class ItemDetailFragment extends Fragment {
         return this.mView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mPost.getSubreddit());
+    }
+
     public class GetCommentsOperation extends AsyncTask<String, Void, ArrayList<Comment>> {
         public GetCommentsOperation(boolean showLoading) {
             super();
@@ -175,7 +183,6 @@ public class ItemDetailFragment extends Fragment {
         protected void onPostExecute(ArrayList<Comment> result) {
             mCommentAdapter.updateList(result);
             mCommentAdapter.notifyDataSetChanged();
-            //setListAdapter(mPostAdapter);
 
             RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.empty);
 
@@ -185,7 +192,6 @@ public class ItemDetailFragment extends Fragment {
                 relativeLayout.setVisibility(View.GONE);
             }
 
-            //mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
             mProgressCircleLayout.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);

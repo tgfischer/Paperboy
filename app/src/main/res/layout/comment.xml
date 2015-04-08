@@ -1,17 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Comment content"
-        android:id="@+id/commentContentTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@color/Grey900" />
+    <View
+        android:id="@+id/leftBar"
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:background="@color/Blue500"
+        android:layout_alignParentStart="true"/>
 
-</RelativeLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/innerRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/leftBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Author"
+            android:id="@+id/authorTextView"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0 points"
+            android:id="@+id/scoreTextView"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:layout_toEndOf="@+id/authorTextView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="TIMESTAMP UNITS ago"
+            android:id="@+id/timestampTextView"
+            android:textColor="@color/Grey500"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/scoreTextView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Comment content"
+            android:id="@+id/commentContentTextView"
+            android:textColor="@color/Grey900"
+            android:layout_below="@+id/authorTextView"
+            android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
+    </LinearLayout>

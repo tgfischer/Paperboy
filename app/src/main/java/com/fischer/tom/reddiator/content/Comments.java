@@ -52,53 +52,6 @@ public class Comments {
         return null;
     }
 
-    // This is where the comment is actually loaded
-    // For each comment, its replies are recursively loaded
-    /*private void process(ArrayList<Comment> comments, JSONArray c, int level) throws Exception {
-        for (int i = 0; i < c.length(); i++) {
-            if (c.getJSONObject(i).optString("kind") == null) {
-                continue;
-            } else if (!c.getJSONObject(i).optString("kind").equals("t1")) {
-                continue;
-            }
-
-            JSONObject data = c.getJSONObject(i).getJSONObject("data");
-
-            Comment comment = this.loadComment(data, level);
-
-            if (comment.getBody() != null) {
-                //ArrayList<Comment> children = this.addReplies(comments, data, level + 1);
-
-                //if (children != null) {
-                    //comment.addChildren(children);
-                //}
-
-                this.addReplies(comment.getChildren(), data, level + 1);
-
-                comments.add(comment);
-            }
-        }
-    }
-
-    // Add replies to the comments
-    private ArrayList<Comment> addReplies(ArrayList<Comment> comments, JSONObject parent, int level){
-        try {
-            if (parent.get("replies").equals("")) {
-                // This means the comment has no replies
-                return null;
-            }
-
-            JSONArray r = parent.getJSONObject("replies").getJSONObject("data").getJSONArray("children");
-            process(comments, r, level);
-
-            return comments;
-        } catch(Exception e) {
-            Log.d("ERROR", "addReplies : " + e);
-        }
-
-        return null;
-    }*/
-
     // Load the comments as an ArrayList, so that it can be
     // easily passed to the ArrayAdapter
     public ArrayList<Comment> fetchComments() {
@@ -113,7 +66,8 @@ public class Comments {
             // All comments at this point are at level 0
             // (i.e., they are not replies)
 
-            comments.addAll(this.processChildren(jsonArray, null, 0));
+            //comments.addAll(this.processChildren(jsonArray, null, 0));
+            this.processChildren(jsonArray, null, 0, comments);
 
             //process(comments, r, 0);
 
@@ -124,7 +78,7 @@ public class Comments {
         return comments;
     }
 
-    public ArrayList<Comment> processChildren(JSONArray jsonComments, Comment parent, int level) {
+    public ArrayList<Comment> processChildren(JSONArray jsonComments, Comment parent, int level, ArrayList<Comment> masterList) {
         ArrayList<Comment> comments = new ArrayList<Comment>();
 
         for (int i = 0; i < jsonComments.length(); i++) {
@@ -141,10 +95,12 @@ public class Comments {
                 Comment comment = this.loadComment(jsonComment, parent, level);
 
                 if (comment != null) {
+                    masterList.add(comment);
+
                     if (!jsonComment.get("replies").equals("")) {
                         JSONArray jsonArray = jsonComment.getJSONObject("replies").getJSONObject("data").getJSONArray("children");
 
-                        comment.addChildren(this.processChildren(jsonArray, comment, level + 1));
+                        comment.addChildren(this.processChildren(jsonArray, comment, level + 1, masterList));
                     }
 
                     comments.add(comment);

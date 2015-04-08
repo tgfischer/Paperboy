@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.ListFragment;
 import android.support.v4.util.LruCache;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class ItemListFragment extends ListFragment {
     private String mSubreddit = "Front Page";
     private DBAdapter dbAdapter;
     private PostAdapter mPostAdapter;
+    private LinearLayout mProgressCircleLayout;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -122,6 +124,7 @@ public class ItemListFragment extends ListFragment {
         mListView = (ListView) this.mView.findViewById(android.R.id.list);
         mListContainer =  this.mView.findViewById(R.id.listContainer);
         mProgressContainer = this.mView.findViewById(R.id.progressContainer);
+        this.mProgressCircleLayout = (LinearLayout) mView.findViewById(R.id.progressContainer);
         mListShown = true;
 
         this.mSwipeRefreshLayout = (SwipeRefreshLayout) this.mView.findViewById(R.id.swipeRefreshLayout);
@@ -130,7 +133,7 @@ public class ItemListFragment extends ListFragment {
             public void onRefresh() {
                 mLastPostIndex = -1;
                 mPosts.clearPosts();
-                new GetPostsOperation(true).execute(mSubreddit);
+                new GetPostsOperation(false).execute(mSubreddit);
             }
         });
 
@@ -139,11 +142,11 @@ public class ItemListFragment extends ListFragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mLastPostIndex = mListView.getFirstVisiblePosition();
-                new GetPostsOperation(true).execute(mSubreddit, "more");
+                new GetPostsOperation(false).execute(mSubreddit, "more");
             }
         });
 
-        new GetPostsOperation(false).execute(mSubreddit);
+        new GetPostsOperation(true).execute(mSubreddit);
 
         return this.mView;
     }
@@ -174,6 +177,13 @@ public class ItemListFragment extends ListFragment {
         }
 
         mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Set title
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mSubreddit);
     }
 
     @Override
@@ -225,35 +235,14 @@ public class ItemListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
-    public void setListShown(boolean shown, boolean animate){
-        if (mListShown == shown) {
-            return;
-        }
-        mListShown = shown;
-        if (shown) {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-            }
-            mProgressContainer.setVisibility(View.GONE);
-            mListContainer.setVisibility(View.VISIBLE);
-        } else {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-            }
-            mProgressContainer.setVisibility(View.VISIBLE);
-            mListContainer.setVisibility(View.INVISIBLE);
-        }
-    }
-    public void setListShown(boolean shown){
-        setListShown(shown, true);
-    }
-
     public class GetPostsOperation extends AsyncTask<String, Void, ArrayList<Post>> {
         public GetPostsOperation(boolean showLoading) {
             super();
-            setListShown(showLoading);
+
+            if (showLoading) {
+                mProgressCircleLayout.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -273,7 +262,6 @@ public class ItemListFragment extends ListFragment {
         protected void onPostExecute(ArrayList<Post> result) {
             mPostAdapter.updateList(result);
             mPostAdapter.notifyDataSetChanged();
-            //setListAdapter(mPostAdapter);
 
             RelativeLayout relativeLayout = (RelativeLayout) mView.findViewById(R.id.empty);
 
@@ -283,9 +271,9 @@ public class ItemListFragment extends ListFragment {
                 relativeLayout.setVisibility(View.GONE);
             }
 
-            //mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
-            setListShown(true);
+            mProgressCircleLayout.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
         }
     }
 }
