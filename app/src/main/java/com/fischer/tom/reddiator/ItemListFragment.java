@@ -249,9 +249,6 @@ public class ItemListFragment extends ListFragment {
     public void setListShown(boolean shown){
         setListShown(shown, true);
     }
-    public void setListShownNoAnimation(boolean shown) {
-        setListShown(shown, false);
-    }
 
     public class GetPostsOperation extends AsyncTask<String, Void, ArrayList<Post>> {
         public GetPostsOperation(boolean showLoading) {

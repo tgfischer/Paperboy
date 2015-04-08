@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class ItemDetailFragment extends Fragment {
     private View mProgressContainer;
     private View mListContainer;
     private int mLastPostIndex = -1;
+    private LinearLayout mProgressCircleLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -87,6 +89,7 @@ public class ItemDetailFragment extends Fragment {
         this.mListView.addHeaderView(mHeaderView, null, false);
 
         this.mCommentAdapter = new CommentsAdapter(getActivity(), R.layout.comment, new ArrayList<Comment>());
+        this.mProgressCircleLayout = (LinearLayout) mView.findViewById(R.id.progressContainer);
 
         mListContainer =  this.mView.findViewById(R.id.listContainer);
         mProgressContainer = this.mView.findViewById(R.id.progressContainer);
@@ -109,14 +112,14 @@ public class ItemDetailFragment extends Fragment {
                 public void onRefresh() {
                     mLastPostIndex = -1;
                     mComments.clearComments();
-                    new GetCommentsOperation(true).execute(mPost.getPermalink());
+                    new GetCommentsOperation(false).execute(mPost.getPermalink());
                 }
             });
 
             this.mListView.setOnScrollListener(new EndlessScrollListener() {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                new GetCommentsOperation(true).execute(mPost.getPermalink(), "more");
+                new GetCommentsOperation(false).execute(mPost.getPermalink(), "more");
                 }
             });
 
@@ -143,44 +146,20 @@ public class ItemDetailFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            new GetCommentsOperation(false).execute(mPost.getPermalink());
+            new GetCommentsOperation(true).execute(mPost.getPermalink());
         }
 
         return this.mView;
     }
 
-    public void setListShown(boolean shown, boolean animate){
-        if (mListShown == shown) {
-            return;
-        }
-        mListShown = shown;
-        if (shown) {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-            }
-            mProgressContainer.setVisibility(View.GONE);
-            mListContainer.setVisibility(View.VISIBLE);
-        } else {
-            if (animate) {
-                mProgressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
-                mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
-            }
-            mProgressContainer.setVisibility(View.VISIBLE);
-            mListContainer.setVisibility(View.INVISIBLE);
-        }
-    }
-    public void setListShown(boolean shown){
-        setListShown(shown, true);
-    }
-    public void setListShownNoAnimation(boolean shown) {
-        setListShown(shown, false);
-    }
-
     public class GetCommentsOperation extends AsyncTask<String, Void, ArrayList<Comment>> {
         public GetCommentsOperation(boolean showLoading) {
             super();
-            setListShown(showLoading);
+
+            if (showLoading) {
+                mProgressCircleLayout.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -208,7 +187,8 @@ public class ItemDetailFragment extends Fragment {
 
             //mListView.setSelectionFromTop(mLastPostIndex, 0);
             mSwipeRefreshLayout.setRefreshing(false);
-            setListShown(true);
+            mProgressCircleLayout.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
         }
     }
 }
