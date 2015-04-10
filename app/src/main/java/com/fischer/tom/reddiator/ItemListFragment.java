@@ -113,9 +113,12 @@ public class ItemListFragment extends ListFragment {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... params) {
-                setListAdapter(mPostAdapter);
-
                 return null;
+            }
+
+            @Override
+            protected  void onPostExecute(Void result) {
+                setListAdapter(mPostAdapter);
             }
         }.execute();
 
