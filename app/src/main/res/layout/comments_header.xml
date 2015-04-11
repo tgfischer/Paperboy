@@ -109,4 +109,15 @@
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="10dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Self Text"
+        android:id="@+id/selfTextView"
+        android:layout_below="@id/usernameTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/Grey900" />
+
 </RelativeLayout>

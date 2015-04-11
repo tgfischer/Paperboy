@@ -85,6 +85,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
 
         holder.scoreTextView.setText(score);
 
+
         holder.postTitleTextView.setText(post.getTitle());
         holder.subredditTextView.setText("r/" + post.getSubreddit());
 

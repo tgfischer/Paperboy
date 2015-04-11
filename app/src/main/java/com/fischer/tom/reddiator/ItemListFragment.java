@@ -110,7 +110,7 @@ public class ItemListFragment extends ListFragment {
         dbAdapter = Database.getInstance(getActivity());
         this.mPostAdapter = new PostAdapter(getActivity(), R.layout.posts, new ArrayList<Post>());
 
-        new AsyncTask<String, Void, Void>() {
+        /*new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... params) {
                 return null;
@@ -120,7 +120,9 @@ public class ItemListFragment extends ListFragment {
             protected  void onPostExecute(Void result) {
                 setListAdapter(mPostAdapter);
             }
-        }.execute();
+        }.execute();*/
+
+        setListAdapter(mPostAdapter);
 
         this.mView = inflater.inflate(R.layout.posts_content, container, false);
         (this.mView.findViewById(R.id.internalEmpty)).setId(0x00ff0001);

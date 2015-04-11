@@ -68,7 +68,11 @@ public class Posts {
                     child.optString("domain"),
                     child.optString("id"),
                     child.optString("thumbnail"),
-                    child.optDouble("created_utc")
+                    child.optDouble("created_utc"),
+                    child.optString("selftext_html"),
+                    child.optInt("gilded"),
+                    child.optBoolean("over_19"),
+                    child.optBoolean("stickied")
                 );
 
                 if(post.getTitle() != null) {

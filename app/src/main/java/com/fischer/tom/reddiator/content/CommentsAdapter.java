@@ -34,14 +34,16 @@ public class CommentsAdapter extends BaseAdapter {
     private final ArrayList<Comment> comments;
     private final int layoutResourceId;
     private final int padding;
+    private final Post post;
 
-    public CommentsAdapter(Context context, int layoutResourceId, ArrayList<Comment> comments) {
+    public CommentsAdapter(Context context, int layoutResourceId, ArrayList<Comment> comments, Post post) {
         super();
 
         this.context = context;
         this.comments = comments;
         this.layoutResourceId = layoutResourceId;
         this.padding = (int)(5 * context.getResources().getDisplayMetrics().density + 0.5f);
+        this.post = post;
     }
 
     public void updateList(ArrayList<Comment> comments) {
@@ -77,7 +79,6 @@ public class CommentsAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.relativeLayout = (LinearLayout)row.findViewById(R.id.relativeLayout);
-            holder.leftBar = (View)row.findViewById(R.id.leftBar);
             holder.commentContentTextView = (TextView)row.findViewById(R.id.commentContentTextView);
             holder.authorTextView = (TextView)row.findViewById(R.id.authorTextView);
             holder.scoreTextView = (TextView)row.findViewById(R.id.scoreTextView);
@@ -100,6 +101,12 @@ public class CommentsAdapter extends BaseAdapter {
         holder.scoreTextView.setText(comment.getScore() + " points");
         holder.timestampTextView.setText(comment.calculateTimestamp(System.currentTimeMillis() / 1000L));
 
+        if (comment.getAuthor().equals(this.post.getAuthor())) {
+            holder.authorTextView.setTextColor(context.getResources().getColor(R.color.Blue500));
+        } else {
+            holder.authorTextView.setTextColor(context.getResources().getColor(R.color.Grey700));
+        }
+
         //holder.leftBar.setLayoutParams(new RelativeLayout.LayoutParams(padding, RelativeLayout.LayoutParams.MATCH_PARENT));
 
         return row;
@@ -108,7 +115,6 @@ public class CommentsAdapter extends BaseAdapter {
     static class ViewHolder
     {
         LinearLayout relativeLayout;
-        View leftBar;
         TextView commentContentTextView;
         TextView authorTextView;
         TextView scoreTextView;

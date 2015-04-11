@@ -15,8 +15,15 @@ public class Post {
     private String id;
     private String thumbnail;
     private double timestamp;
+    private String selftext_html;
+    private int gilded;
+    private boolean over_18;
+    private boolean stickied;
 
-    public Post(String subreddit, String title, String author, int points, int numComments, String permalink, String url, String domain, String id, String thumbnail, double timestamp) {
+    public Post(String subreddit, String title, String author, int points, int numComments,
+                String permalink, String url, String domain, String id, String thumbnail,
+                double timestamp, String selftext_html, int guilded, boolean over_18,
+                boolean stickied) {
         this.subreddit = subreddit;
         this.title = title;
         this.author = author;
@@ -28,6 +35,10 @@ public class Post {
         this.id = id;
         this.thumbnail = thumbnail;
         this.timestamp = timestamp;
+        this.selftext_html = selftext_html;
+        this.gilded = gilded;
+        this.over_18 = over_18;
+        this.stickied = stickied;
     }
 
     @Override
@@ -73,6 +84,26 @@ public class Post {
 
     public String getThumbnail() {
         return this.thumbnail;
+    }
+
+    public String getSelftext() {
+        return this.selftext_html;
+    }
+
+    public int getGilded() {
+        return this.gilded;
+    }
+
+    public boolean isOver_18() {
+        return this.over_18;
+    }
+
+    public boolean isStickied() {
+        return this.stickied;
+    }
+
+    public boolean hasSelftext() {
+        return !this.selftext_html.equals("null");
     }
 
     public String calculateTimestamp(double now) {

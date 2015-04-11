@@ -18,17 +18,17 @@ public class Comments {
 
     private String url;
     private String after;
-    private String permalink;
     private ArrayList<Comment> mComments;
+    private Post mPost;
 
-    public Comments(String permalink) {
-        this.permalink = permalink;
+    public Comments(Post post) {
+        this.mPost = post;
         this.after = "";
         this.generateURL();
     }
 
     private void generateURL(){
-        url = URL_TEMPLATE.replace("PERMALINK", this.permalink);
+        url = URL_TEMPLATE.replace("PERMALINK", this.mPost.getPermalink());
         url = url.replace("AFTER", this.after);
     }
 
@@ -60,16 +60,9 @@ public class Comments {
         try {
             // Fetch the contents of the comments page
             String raw = RedditData.getJSON(url);
+            JSONArray jsonCommentsArray = new JSONArray(raw).getJSONObject(1).getJSONObject("data").getJSONArray("children");
 
-            JSONArray jsonArray = new JSONArray(raw).getJSONObject(1).getJSONObject("data").getJSONArray("children");
-
-            // All comments at this point are at level 0
-            // (i.e., they are not replies)
-
-            //comments.addAll(this.processChildren(jsonArray, null, 0));
-            this.processChildren(jsonArray, null, 0, comments);
-
-            //process(comments, r, 0);
+            this.processChildren(jsonCommentsArray, null, 0, comments);
 
         } catch(Exception e){
             Log.d("ERROR","Could not connect: "+e);

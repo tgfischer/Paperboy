@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,21 +91,26 @@ public class ItemDetailFragment extends Fragment {
         this.mListView = (ListView) this.mView.findViewById(R.id.commentsListView);
         this.mListView.addHeaderView(mHeaderView, null, false);
 
-        this.mCommentAdapter = new CommentsAdapter(getActivity(), R.layout.comment, new ArrayList<Comment>());
+        this.mCommentAdapter = new CommentsAdapter(getActivity(), R.layout.comment, new ArrayList<Comment>(), mPost);
         this.mProgressCircleLayout = (LinearLayout) mView.findViewById(R.id.progressContainer);
 
         mListContainer =  this.mView.findViewById(R.id.listContainer);
         mProgressContainer = this.mView.findViewById(R.id.progressContainer);
         mListShown = true;
 
-        new AsyncTask<String, Void, Void>() {
+        /*new AsyncTask<String, Void, Void>() {
             @Override
             protected Void doInBackground(String... params) {
-                mListView.setAdapter(mCommentAdapter);
-
                 return null;
             }
-        }.execute();
+
+            @Override
+            protected  void onPostExecute(Void result) {
+                mListView.setAdapter(mCommentAdapter);
+            }
+        }.execute();*/
+
+        mListView.setAdapter(mCommentAdapter);
 
         // Show the dummy content as text in a TextView.
         if (mPost != null) {
@@ -113,14 +120,14 @@ public class ItemDetailFragment extends Fragment {
                 public void onRefresh() {
                     mLastPostIndex = -1;
                     mComments.clearComments();
-                    new GetCommentsOperation(false).execute(mPost.getPermalink());
+                    new GetCommentsOperation(false).execute(mPost);
                 }
             });
 
             this.mListView.setOnScrollListener(new EndlessScrollListener() {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                new GetCommentsOperation(false).execute(mPost.getPermalink(), "more");
+                new GetCommentsOperation(false).execute(mPost);
                 }
             });
 
@@ -140,6 +147,14 @@ public class ItemDetailFragment extends Fragment {
             ((TextView) this.mHeaderView.findViewById(R.id.numCommentsTextView)).setText(numComments + " comments");
             ((TextView) this.mHeaderView.findViewById(R.id.usernameTextView)).setText("by " + mPost.getAuthor());
             ((TextView) this.mHeaderView.findViewById(R.id.timestampTextView)).setText(mPost.calculateTimestamp(System.currentTimeMillis() / 1000L));
+            TextView selftext = (TextView)mHeaderView.findViewById(R.id.selfTextView);
+
+            if (mPost.hasSelftext()) {
+                Spanned text = Html.fromHtml(Html.fromHtml(mPost.getSelftext()).toString());
+                selftext.setText(text.subSequence(0, text.length() - 2));
+            } else {
+                selftext.setVisibility(View.GONE);
+            }
 
             try {
                 new ImageLoader(new URI(mPost.getThumbnail()), ((ImageView) this.mHeaderView.findViewById(R.id.thumbnailImageView)), 50, 38).execute();
@@ -147,7 +162,7 @@ public class ItemDetailFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            new GetCommentsOperation(true).execute(mPost.getPermalink());
+            new GetCommentsOperation(true).execute(mPost);
         }
 
         return this.mView;
@@ -157,10 +172,10 @@ public class ItemDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Set title
-        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(mPost.getSubreddit());
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle("r/" + mPost.getSubreddit());
     }
 
-    public class GetCommentsOperation extends AsyncTask<String, Void, ArrayList<Comment>> {
+    public class GetCommentsOperation extends AsyncTask<Post, Void, ArrayList<Comment>> {
         public GetCommentsOperation(boolean showLoading) {
             super();
 
@@ -171,7 +186,7 @@ public class ItemDetailFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<Comment> doInBackground(String... params) {
+        protected ArrayList<Comment> doInBackground(Post... params) {
             if (mComments == null) {
                 mComments = new Comments(params[0]);
             }

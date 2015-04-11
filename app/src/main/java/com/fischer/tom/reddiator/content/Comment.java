@@ -37,7 +37,7 @@ public class Comment {
     }
 
     public String calculateTimestamp(double now) {
-        String timestamp = "posted TIME UNITS ago";
+        String timestamp = "TIME UNITS ago";
 
         Integer difference = (int)Math.round(now - this.timestamp);
 
