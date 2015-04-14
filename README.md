@@ -10,3 +10,5 @@ Here are a few screenshots (taken April 14th, 2015)
 ![post comments](http://i.imgur.com/e0GfvaW.png "Post Comments")
 
 ![post link](http://i.imgur.com/7syic1O.png "Post Link")
+
+Icons made by [Icons8](http://www.flaticon.com/authors/icons8), [Freepik](http://www.flaticon.com/authors/freepik), and [Google](http://www.flaticon.com/authors/google) from [http://www.flaticon.com](Flaticon) is licensed by [http://creativecommons.org/licenses/by/3.0/](CC BY 3.0).
