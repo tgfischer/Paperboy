@@ -55,12 +55,14 @@ public class WebLinkActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class WebLinkFragment extends Fragment {
 
         private String mUrl = "www.google.com";
+        private WebView mWebView;
 
         public WebLinkFragment() {
         }
@@ -71,17 +73,17 @@ public class WebLinkActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_web_link, container, false);
 
             this.mUrl = getArguments().getString("url");
-            WebView webView = (WebView)rootView.findViewById(R.id.webView);
-            webView.setWebViewClient(new WebViewClient());
+            this.mWebView = (WebView)rootView.findViewById(R.id.webView);
+            this.mWebView.setWebViewClient(new WebViewClient());
 
-            WebSettings settings = webView.getSettings();
+            WebSettings settings = this.mWebView.getSettings();
             settings.setJavaScriptEnabled(true);
-            settings.setLoadWithOverviewMode(true);
-            settings.setUseWideViewPort(true);
             settings.setBuiltInZoomControls(true);
             settings.setSupportZoom(true);
+            settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
 
-            webView.loadUrl(this.mUrl);
+            this.mWebView.loadUrl(this.mUrl);
 
             return rootView;
         }
@@ -91,6 +93,18 @@ public class WebLinkActivity extends ActionBarActivity {
             super.onResume();
             // Set title
             ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(this.mUrl);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+
+            if (this.mWebView != null){
+                this.mWebView.stopLoading();
+                this.mWebView.loadUrl("");
+                this.mWebView.reload();
+                this.mWebView = null;
+            }
         }
     }
 }

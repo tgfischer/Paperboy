@@ -1,5 +1,6 @@
 package com.fischer.tom.reddiator;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,12 +25,11 @@ import android.widget.TextView;
 import com.fischer.tom.reddiator.content.Comment;
 import com.fischer.tom.reddiator.content.Comments;
 import com.fischer.tom.reddiator.content.CommentsAdapter;
+import com.fischer.tom.reddiator.content.DBAdapter;
+import com.fischer.tom.reddiator.content.Database;
 import com.fischer.tom.reddiator.content.Post;
 import com.fischer.tom.reddiator.content.PostAdapter;
 import com.fischer.tom.reddiator.content.Posts;
-
-
-import com.fischer.tom.reddiator.dummy.DummyContent;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,6 +63,7 @@ public class ItemDetailFragment extends Fragment {
     private View mListContainer;
     private int mLastPostIndex = -1;
     private LinearLayout mProgressCircleLayout;
+    private DBAdapter dbAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -113,6 +115,8 @@ public class ItemDetailFragment extends Fragment {
 
         mListView.setAdapter(mCommentAdapter);
 
+        this.dbAdapter = Database.getInstance(getActivity());
+
         // Show the dummy content as text in a TextView.
         if (mPost != null) {
             this.mSwipeRefreshLayout = (SwipeRefreshLayout) this.mView.findViewById(R.id.swipeRefreshLayout);
@@ -158,11 +162,22 @@ public class ItemDetailFragment extends Fragment {
                 selftext.setVisibility(View.GONE);
             }
 
+            ImageButton thumbnailImageButton = ((ImageButton) this.mHeaderView.findViewById(R.id.thumbnailImageButton));
+
             try {
-                new ImageLoader(new URI(mPost.getThumbnail()), ((ImageView) this.mHeaderView.findViewById(R.id.thumbnailImageView)), 50, 38).execute();
+                new ImageLoader(new URI(mPost.getThumbnail()), thumbnailImageButton, 50, 38).execute();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
+
+            thumbnailImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Toast.makeText(context, "Clicky", Toast.LENGTH_LONG).show();
+
+                    startActivity(new Intent(getActivity(), WebLinkActivity.class).putExtra("url", mPost.getURL()));
+                }
+            });
 
             new GetCommentsOperation(true).execute(mPost);
         }
