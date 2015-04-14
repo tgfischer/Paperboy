@@ -1,4 +1,4 @@
-<img src="http://i.imgur.com/HM9r5QF.png" alt="Paperboy" width="32" height="auto" /> Paperboy
+#<img src="http://i.imgur.com/HM9r5QF.png" alt="Paperboy" width="32" height="auto" /> Paperboy
 This is a Reddit app that runs on Android. It is currently in beta, it is missing a lot of features (e.g., logging in, voting, searching, etc.), and the code is a little sloppy as a now (hopefully I can clean it up soon). This app is something I'm doing in my spare time for now, but hopefully it will eventually become something that I can release to the app store.
 
 Here are a few screenshots (taken April 14th, 2015)
