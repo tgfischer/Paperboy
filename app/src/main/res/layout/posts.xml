@@ -100,14 +100,14 @@
         android:layout_alignStart="@+id/timestampTextView"
         android:layout_toLeftOf="@+id/thumbnailImageView"/>
 
-    <ImageView
+    <ImageButton
         android:layout_width="50dp"
         android:layout_height="38dp"
         android:id="@+id/thumbnailImageView"
-        android:src="@drawable/blank_thumbnail"
         android:scaleType="fitCenter"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/blank_thumbnail" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,6 +153,7 @@ public class ItemDetailFragment extends Fragment {
             if (mPost.hasSelftext()) {
                 Spanned text = Html.fromHtml(Html.fromHtml(mPost.getSelftext()).toString());
                 selftext.setText(text.subSequence(0, text.length() - 2));
+                selftext.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 selftext.setVisibility(View.GONE);
             }

@@ -39,6 +39,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fischer.tom.reddiator.ItemListActivity" />
         </activity>
+        <activity
+            android:name=".WebLinkActivity"
+            android:label="@string/title_activity_web_link"
+            android:parentActivityName=".ItemListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fischer.tom.reddiator.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>

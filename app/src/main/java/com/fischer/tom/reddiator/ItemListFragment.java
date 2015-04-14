@@ -105,7 +105,13 @@ public class ItemListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.mSubreddit = this.getArguments().getString("subreddit");
+        if (getActivity().getIntent().getStringExtra("subreddit") != null) {
+            this.mSubreddit = this.getActivity().getIntent().getStringExtra("subreddit");
+            this.getActivity().getIntent().removeExtra("subreddit");
+        } else if (this.getArguments().getString("subreddit") != null) {
+            this.mSubreddit = this.getArguments().getString("subreddit");
+        }
+
 
         dbAdapter = Database.getInstance(getActivity());
         this.mPostAdapter = new PostAdapter(getActivity(), R.layout.posts, new ArrayList<Post>());

@@ -1,5 +1,6 @@
 package com.fischer.tom.reddiator.content;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
@@ -14,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.fischer.tom.reddiator.ImageLoader;
+import com.fischer.tom.reddiator.MainActivity;
 import com.fischer.tom.reddiator.R;
+import com.fischer.tom.reddiator.WebLinkActivity;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -48,7 +53,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ViewHolder holder = null;
-        Post post = data.get(position);
+        final Post post = data.get(position);
 
         if(row == null)
         {
@@ -60,7 +65,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
             holder.usernameTextView = (TextView)row.findViewById(R.id.usernameTextView);
             holder.subredditTextView = (TextView)row.findViewById(R.id.subredditTextView);
             holder.numCommentsTextView = (TextView)row.findViewById(R.id.numCommentsTextView);
-            holder.thumbnailImageView = (ImageView)row.findViewById(R.id.thumbnailImageView);
+            holder.thumbnailImageButton = (ImageButton)row.findViewById(R.id.thumbnailImageView);
             holder.scoreTextView = (TextView)row.findViewById(R.id.scoreTextView);
             holder.timestampTextView = (TextView)row.findViewById(R.id.timestampTextView);
 
@@ -98,10 +103,21 @@ public class PostAdapter extends ArrayAdapter<Post> {
         holder.timestampTextView.setText(post.calculateTimestamp(System.currentTimeMillis() / 1000L));
 
         try {
-            new ImageLoader(new URI(post.getThumbnail()), holder.thumbnailImageView, 50, 38).execute();
+            new ImageLoader(new URI(post.getThumbnail()), holder.thumbnailImageButton, 50, 38).execute();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+        holder.thumbnailImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Toast.makeText(context, "Clicky", Toast.LENGTH_LONG).show();
+
+                context.startActivity(new Intent(context, WebLinkActivity.class).putExtra("url", post.getURL()));
+                dbAdapter.insertRow(post.getPermalink());
+                notifyDataSetChanged();
+            }
+        });
 
         return row;
     }
@@ -112,7 +128,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         TextView usernameTextView;
         TextView subredditTextView;
         TextView numCommentsTextView;
-        ImageView thumbnailImageView;
+        ImageButton thumbnailImageButton;
         TextView scoreTextView;
         TextView timestampTextView;
     }

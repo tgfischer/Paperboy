@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fischer.tom.reddiator.CommentsMovementMethod;
 import com.fischer.tom.reddiator.ImageLoader;
 import com.fischer.tom.reddiator.R;
 
@@ -95,6 +97,7 @@ public class CommentsAdapter extends BaseAdapter {
 
         Spanned text = Html.fromHtml(Html.fromHtml(comment.getBody()).toString());
         holder.commentContentTextView.setText(text.subSequence(0, text.length() - 2));
+        holder.commentContentTextView.setMovementMethod(CommentsMovementMethod.getInstance(context));
 
         holder.authorTextView.setText(comment.getAuthor());
         holder.authorTextView.setTypeface(null, Typeface.BOLD);
